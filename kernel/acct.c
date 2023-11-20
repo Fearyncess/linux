@@ -246,7 +246,7 @@ static int acct_on(struct filename *pathname)
 		filp_close(file, NULL);
 		return PTR_ERR(internal);
 	}
-	err = __mnt_want_write(internal);
+	err = mnt_get_write_access(internal);
 	if (err) {
 		mntput(internal);
 		kfree(acct);
@@ -271,7 +271,7 @@ static int acct_on(struct filename *pathname)
 	old = xchg(&ns->bacct, &acct->pin);
 	mutex_unlock(&acct->lock);
 	pin_kill(old);
-	__mnt_drop_write(mnt);
+	mnt_put_write_access(mnt);
 	mntput(mnt);
 	return 0;
 }
@@ -470,7 +470,7 @@ static void fill_ac(acct_t *ac)
 	do_div(elapsed, AHZ);
 	btime = ktime_get_real_seconds() - elapsed;
 	ac->ac_btime = clamp_t(time64_t, btime, 0, U32_MAX);
-#if ACCT_VERSION==2
+#if ACCT_VERSION == 2
 	ac->ac_ahz = AHZ;
 #endif
 

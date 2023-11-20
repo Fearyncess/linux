@@ -748,7 +748,7 @@ static int amd_pinconf_get(struct pinctrl_dev *pctldev,
 		break;
 
 	default:
-		dev_err(&gpio_dev->pdev->dev, "Invalid config param %04x\n",
+		dev_dbg(&gpio_dev->pdev->dev, "Invalid config param %04x\n",
 			param);
 		return -ENOTSUPP;
 	}
@@ -798,7 +798,7 @@ static int amd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
 			break;
 
 		default:
-			dev_err(&gpio_dev->pdev->dev,
+			dev_dbg(&gpio_dev->pdev->dev,
 				"Invalid config param %04x\n", param);
 			ret = -ENOTSUPP;
 		}
@@ -1166,7 +1166,7 @@ out2:
 	return ret;
 }
 
-static int amd_gpio_remove(struct platform_device *pdev)
+static void amd_gpio_remove(struct platform_device *pdev)
 {
 	struct amd_gpio *gpio_dev;
 
@@ -1174,8 +1174,6 @@ static int amd_gpio_remove(struct platform_device *pdev)
 
 	gpiochip_remove(&gpio_dev->gc);
 	acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
-
-	return 0;
 }
 
 #ifdef CONFIG_ACPI
@@ -1197,7 +1195,7 @@ static struct platform_driver amd_gpio_driver = {
 #endif
 	},
 	.probe		= amd_gpio_probe,
-	.remove		= amd_gpio_remove,
+	.remove_new	= amd_gpio_remove,
 };
 
 module_platform_driver(amd_gpio_driver);

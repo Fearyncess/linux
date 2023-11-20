@@ -72,7 +72,6 @@ extern unsigned int zlib_dfltcc_support;
 #define ZLIB_DFLTCC_INFLATE_ONLY	3
 #define ZLIB_DFLTCC_FULL_DEBUG		4
 
-extern int noexec_disabled;
 extern unsigned long ident_map_size;
 extern unsigned long max_mappable;
 
@@ -125,9 +124,6 @@ static inline void vmcp_cma_reserve(void) { }
 #endif
 
 void report_user_fault(struct pt_regs *regs, long signr, int is_mm_fault);
-
-void cmma_init(void);
-void cmma_init_nodat(void);
 
 extern void (*_machine_restart)(char *command);
 extern void (*_machine_halt)(void);
